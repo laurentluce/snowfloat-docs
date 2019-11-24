@@ -1,0 +1,23 @@
+===========================
+SnowFloat Geo documentation
+===========================
+
+.. rubric:: Everything you need to know about SnowFloat Geo.
+
+Getting help
+============
+
+Having trouble? We'd like to help!
+
+* Looking for specific information? Try the :ref:`genindex`, :ref:`modindex` or
+  the :doc:`detailed table of contents <contents>`.
+
+* Send us an email at `SnowFloat Help`_.
+
+.. _SnowFloat help: mailto:snowfloat@snowfloat.com
+
+First steps
+===========
+
+* **Python Client Tutorial:**
+  :doc:`Tutorial <clients/python/tutorial>`

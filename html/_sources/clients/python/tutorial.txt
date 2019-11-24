@@ -1,0 +1,245 @@
+=======================
+SnowFloat Python client
+=======================
+
+We'll assume you have :doc:`snowfloat-python installed </clients/python/install>` already.
+
+If you're having trouble going through this tutorial, please email us at `SnowFloat Help`__.
+
+__ mailto:snowfloat@snowfloat.com
+
+Let's learn by example.
+
+We are tracking two seals: "Sally" (Red points) and "Tom" (Green points).
+
+.. image:: img/trace.png
+
+Each point has a longitude (x), latitude (y) and altitude (z) along with a timestamp and a heartbeat value. We want to store this data online and run some queries on it.
+
+Each seal can be seen as a container and we can associate points to each container. 
+
+.. note:: SnowFloat can be applied to many domains: Scientific, Aviation, Maritime, Defense, Cities...
+
+Login
+=====
+
+You need to login using the API key. We pass the API key to the method :py:meth:`snowfloat.client.Client.login`::
+
+    >>> import snowfloat.client
+
+    >>> client = snowfloat.client.Client()
+    >>> client.login(api_key)
+
+.. note:: The session expires after 300 seconds of inactivity.
+
+Adding our two containers
+=========================
+
+We need two containers, one for "Sally" and one for "Tom". We pass a list of :py:class:`snowfloat.container.Container` objects to the method :py:meth:`snowfloat.client.Client.add_containers`::
+
+    >>> containers = [Container(dat='Sally'),
+    ...               Container(dat='Bob')]
+    >>> containers = client.add_containers(containers)
+    
+At that point, the containers are stored online. Note how each object now has a unique ID and a unique URI.
+
+    >>> containers[0]
+    Container(id=11d53e204a9b45299e68d186e7405779,
+              uri=/geo/1/containers/11d53e204a9b45299e68d186e7405779,
+              dat=Sally,
+              ts_created=1358100636,
+              ts_modified=1358100636)
+
+    >>> container[0].dat
+    'Sally'
+
+
+Adding points to a container
+============================
+
+We pass a list of :py:class:`snowfloat.geometry.Point` objects to the method :py:meth:`snowfloat.container.Container.add_geometries`. We use the 'dat' key to store the heartbeat value::
+
+    >>> points = [Point(coordinates=[x1, y1, z1], ts=1358000736, dat='61'),
+    ...           Point(coordinates=[x2, y2, z2], ts=1358000796, dat='63')]
+    # z coordinate defaults to 0.
+    # 'ts' default value is the current time.
+    # 'dat' default value is an emptry string. 16 bytes maximum.
+
+    >>> points = container.add_geometries(points)
+   
+The points are now stored online. The method takes care of sending the points in batches of 1000. We can repeat the same step for our second container.
+
+    >>> points[0]
+    Point(id=6bf3f0bc551f41a6b6d435d51793c850,
+          uri=/geo/1/containers/11d53e204a9b45299e68d186e7405779/geometries/6bf3f0bc551f41a6b6d435d51793c850
+          coordinates=[x1, y1, z1],
+          ts=1358000736,
+          dat='61',
+          ts_created=1358010636,
+          ts_modified=1358010636)
+    >>> points[0].dat
+    '61'
+
+We could also have used the method :py:meth:`snowfloat.client.Client.add_geometries` and specified the container ID.
+
+If you have Shapely installed, the Point object is also a shapely.geometry.Point object::
+
+    >>> points[0].x
+    x1
+
+Likely, we can add polygons to our container or even a mix of points and polygons.
+
+
+Retrieving points
+=================
+
+We want to retrieve the points which timestamp is included in the [t1, t2] range. We use the method :py:meth:`snowfloat.container.Container.get_points`::
+
+    >>> points = container.get_geometries(type='Point', ts_range=(t1, t2))
+    # ts_range defaults to (0, time.time())
+
+We could also have used the method :py:meth:`snowfloat.client.Client.get_points` and specified the container ID.
+
+
+Deleting points
+===============
+
+We want to delete the points with a timestamp older than 24 hours for a specific container ID. We use the method :py:meth:`snowfloat.container.Container.delete_points`::
+    
+    >>> container.delete_geometries(type='Point',
+                                    ts_range(0, time.time() - 24*3600)
+    # ts_range defaults to (0, time.time())
+    
+We could also have used the method :py:meth:`snowfloat.client.Client.delete_points` and specified the container ID.
+
+We can also delete individual point by using the method :py:meth:`snowfloat.geometry.Geometry.delete`::
+
+    >>> points[0].delete()
+
+
+Distance queries
+================
+
+We can run some distance queries on our data online. For example, we want to get the list of points less than 10kms from a given point.
+
+.. image:: img/distance.png
+
+This will tell us how much time was spent by "Tom" in this circular area::
+
+    >>> import snowfloat.geometry
+
+    # Our lookup Point object.
+    >>> point = snowfloat.geometry.Point([x, y])
+
+    # Let's run our query on our dataset.
+    >>> points = container.get_geometries(type='Point', query='distance_lt',
+                                          geometry=point, distance=10000)
+    # The distance needs to be in meters.
+
+The distance queries supported are:
+
+* **distance_gt**: Returns geometries where the distance to the geometry from the lookup geometry is greater than the given distance value.
+* **distance_gte**: Returns geometries where the distance to the geometry from the lookup geometry is greater than or equal to the given distance value.
+* **distance_lt**: Returns geometries where the distance to the geometry from the lookup geometry is less than the given distance value.
+* **distance_lte**: Returns geometries where the distance to the geometry from the lookup geometry is less than or equal to the given distance value.
+* **dwithin**: Returns geometries where the distance to the geometry from the lookup geometry are within the given distance from one another.
+
+.. note:: The z coordinate is dropped during those queries.
+
+Spatial queries
+===============
+
+We can run some spatial queries on our data online. For example, we want to get the list of points contained by an area defined as a polygon.
+
+.. image:: img/polygon.png
+
+::
+
+    >>> import snowfloat.geometry
+
+    # Our lookup Polygon object
+    >>> polygon = snowfloat.geometry.Polygon([[[x1, y1],
+                                               [x2, y2],
+                                               [x3, y3],
+                                               [x4, y4],
+                                               [x5, y5]]])
+    # z coordinate defaults to 0.
+
+    # Let's run our query on our dataset.
+    >>> points = container.get_geometries(type='Point', query='contained',
+                                          geometry=polygon)
+
+The spatial lookups supported are:
+
+* **bbcontains**: Returns geometries which bounding box completely contains the lookup geometry’s bounding box.
+* **bboverlaps**: Returns geometries which bounding box overlaps the lookup geometry’s bounding box.
+* **contained**: Returns geometries which bounding box is completely contained by the lookup geometry’s bounding box.
+* **contains**: Returns geometries containing spatially the lookup geometry.
+* **contains_properly**: Returns geometries which interior (not the boundary) is intersected by the loockup geometry.
+* **covers**: Returns geometries covering the lookup geometry.
+* **crosses**: Returns geometries crossing spatially the lookup geometry.
+* **disjoint**: Returns geometries spatially disjointed from the lookup geometry.
+* **equals**: Returns geometries equal to the lookup geometry.
+* **intersects**: Returns geometries instersecting spatially the lookup geometry.
+* **overlaps**: Returns geometries overlapping spatially the lookup geometry.
+* **touches**: Returns geometries touching spatially the lookup geometry.
+* **within**: Returns geometries spatially within the lookup geometry.
+* **left**: Returns geometries which bounding box is strictly to the left of the lookup geometry's bounding box.
+* **right**: Returns geometries which bounding box is strictly to the right of the lookup geometry's bounding box.
+* **overlaps_left**: Returns geometries which bounding box overlaps or is to the left of the lookup geometry's bounding box.
+* **overlaps_right**: Returns geometries which bounding box overlaps or is to the right of the lookup geometry's bounding box.
+* **overlaps_above**: Returns geometries which bounding box overlaps or is above the lookup geometry's bounding box.
+* **overlaps_below**: Returns geometries which bounding box overlaps or is below the lookup geometry's bounding box.
+* **strictly_above**: Returns geometries which bounding box is strictly above the lookup geometry's bounding box.
+* **strictly_below**: Returns geometries which bounding box is strictly below the lookup geometry's bounding box.
+
+.. note::
+
+    The z coordinate is dropped during those queries.
+
+Tasks
+=====
+
+We can also execute some tasks to perform time consuming computations. The method :py:meth:`snowfloat.client.execute_tasks` will send the tasks to the server, wait for them to complete and return the results.
+
+A task is specified using an operation, a resource and some parameters specific to the operation chosen. We can execute multiple tasks at the same time.
+
+One example is to execute two tasks calculating the distance and the velocity based on a list of points we have pushed to the server. Let say, we want to calculate the distance swimmed by our two seals "Sally" and "Tom" and their velocity between time t1 and t2::
+
+        >>> tasks = [
+        ...    {'operation': snowfloat.task.Operations.stats,
+        ...     'resource': 'points',
+        ...     'container_id': containers[0].id,
+        ...     'ts_range': (t1, t2)}
+        ...    {'operation': snowfloat.task.Operations.stats,
+        ...     'resource': 'points',
+        ...     'container_id': containers[1].id,
+        ...     'ts_range': (t1, t2)}]
+        >>> r = self.client.execute_tasks(tasks)
+        >>> r
+        [[{"count": 10000, "distance": 38263, "velocity": 0.21}],
+         [{"count": 10000, "distance": 14231, "velocity": 0.06}]]
+
+.. note:: If a task fails, the dictionary will contain a key 'error' with a value set to the failure's reason.
+
+Another example is to execute one task generating a map with the points from our two containers between time t1 and t2. We use the "extras" field to specify our map box. The result is a URL you can use in a GET request to retrieve the map (png format)::
+
+        >>> tasks = [
+        ...    {'operation': snowfloat.task.Operations.map,
+        ...     'resource': 'points',
+        ...     'container_ids': (containers[0].id, containers[1].id),
+        ...     'extras': {'llcrnrlat': -75,
+        ...                'llcrnrlon': -165},
+        ...                'urcrnrlat': 75},
+        ...                'urcrnrlon': 165},
+        ...     'ts_range': (t1, t2)}]
+        >>> r = self.client.execute_tasks(tasks)
+        >>> r
+        [[{"url": "http://snowfloat.results.s3.amazonaws.com/ac7a4cf7b5cb4ace9cc33710883d68d7?Signature=PuVycdfhYyUmK4tMZ0YXaCYWG2Y%3D&Expires=1360635770&AWSAccessKeyId=AKIAJW5GLVYHVBDEHB7Q"}]]
+
+.. note:: The URLs are only valid for 10 minutes for security reasons.
+
+See :doc:`/tasks` for a complete list of the tasks you can execute.
+
+See :doc:`/clients/python/performance` for a report on the performance for common operations.
+

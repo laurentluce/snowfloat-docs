@@ -1,0 +1,72 @@
+======
+Limits
+======
+
+This document goes over the different limits you may encounter and how tracking is performed.
+
+Containers
+==========
+
+This is the maximum number of containers you can store online. The following example increases the number of containers by two::
+
+    >>> containers = [Container(dat='Sally'),
+    ...               Container(dat='Bob')]
+    >>> containers = client.add_containers(containers)
+
+Points
+======
+
+This is the maximum number of points you can store online. Adding a polygon results in adding multiple points. The following example increases the number of points by 8 (4 + 4)::
+
+    >>> polygons = [Polygon(coordinates=[[[x1, y1, z1],
+    ...                                   [x2, y2, z2],
+    ...                                   [x3, y3, z3],
+    ...                                   [x1, y1, z1]]],
+    ...                     ts=ts1,
+    ...                     dat=dat1),
+    ...             Polygon(coordinates=[[[x1, y1, z1],
+    ...                                   [x2, y2, z2],
+    ...                                   [x3, y3, z3],
+    ...                                   [x1, y1, z1]]],
+    ...                     ts=ts2,
+    ...                     dat=dat2)]
+    >>> polygons = container.add_geometries(polygons)
+ 
+Tasks
+=====
+
+This is the maximum number of tasks you can execute per hour. The following example increases the number of tasks by two. Only successful tasks are counted::
+
+        >>> tasks = [
+        ...    {'operation': snowfloat.task.Operations.stats,
+        ...     'resource': 'points',
+        ...     'container_id': containers[0].id,
+        ...     'ts_range': (t1, t2)}
+        ...    {'operation': snowfloat.task.Operations.stats,
+        ...     'resource': 'points',
+        ...     'container_id': containers[1].id,
+        ...     'ts_range': (t1, t2)}]
+        >>> r = self.client.execute_tasks(tasks)
+
+Tasks time
+==========
+
+This is the maximum time in seconds which tasks can use per hour. Only successful tasks durations are counted.
+
+Requests
+========
+
+This is the maximum number of HTTP requests you can send per hour. Examples:
+
+* Passing 2000 geometries to the method :py:meth:`snowfloat.container.Container.add_geometries` results in two requests sent (2 batches of 1000 geometries).
+* Retrieving 2000 geometries using the method :py:meth:`snowfloat.container.Container.get_geometries` results in two requests sent (2 batches of 1000 geometries).
+* Executing a task taking 17 seconds to complete results in 7 requests:
+    * 1 request to send the task.
+    * 5 requests to check if the task has been completed. (Every 5 seconds, you can pass a different interval).
+    * 1 request to get the result.
+
+If you're having more questions, please email us at `SnowFloat Help`__.
+
+__ mailto:snowfloat@snowfloat.com
+
+

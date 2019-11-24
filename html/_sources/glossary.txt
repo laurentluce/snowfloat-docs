@@ -1,0 +1,17 @@
+.. _glossary:
+
+========
+Glossary
+========
+
+.. glossary::
+
+    container
+        A container contains geometries like points for example.
+
+        See :doc:`/clients/python/container`.
+
+    point
+        A point is defined by its latitude (x), longitude (y) and altitude (z). A timestamp and some data can be attached to a point.
+
+        See :doc:`/clients/python/point`.

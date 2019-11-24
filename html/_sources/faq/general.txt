@@ -1,0 +1,9 @@
+FAQ: General
+============
+
+Why does SnowFloat exist?
+-------------------------
+
+Building a system to manage and compute Geo data is hard and Snowfloat tries to remove most of that complexity so you can focus on solving your real problem.
+
+

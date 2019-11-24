@@ -1,0 +1,8 @@
+=============
+SnowFloat FAQ
+=============
+
+.. toctree::
+   :maxdepth: 2
+   
+   general

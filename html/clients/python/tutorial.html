@@ -1,0 +1,329 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>SnowFloat Python client &#8212; SnowFloat 0.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">SnowFloat 0.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="snowfloat-python-client">
+<h1>SnowFloat Python client<a class="headerlink" href="#snowfloat-python-client" title="Permalink to this headline">¶</a></h1>
+<p>We’ll assume you have <a class="reference internal" href="install.html"><span class="doc">snowfloat-python installed</span></a> already.</p>
+<p>If you’re having trouble going through this tutorial, please email us at <a class="reference external" href="mailto:snowfloat&#37;&#52;&#48;snowfloat&#46;com">SnowFloat Help</a>.</p>
+<p>Let’s learn by example.</p>
+<p>We are tracking two seals: “Sally” (Red points) and “Tom” (Green points).</p>
+<img alt="../../_images/trace.png" src="../../_images/trace.png" />
+<p>Each point has a longitude (x), latitude (y) and altitude (z) along with a timestamp and a heartbeat value. We want to store this data online and run some queries on it.</p>
+<p>Each seal can be seen as a container and we can associate points to each container.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">SnowFloat can be applied to many domains: Scientific, Aviation, Maritime, Defense, Cities…</p>
+</div>
+<div class="section" id="login">
+<h2>Login<a class="headerlink" href="#login" title="Permalink to this headline">¶</a></h2>
+<p>You need to login using the API key. We pass the API key to the method <a class="reference internal" href="client.html#snowfloat.client.Client.login" title="snowfloat.client.Client.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.login()</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">snowfloat.client</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">snowfloat</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">api_key</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The session expires after 300 seconds of inactivity.</p>
+</div>
+</div>
+<div class="section" id="adding-our-two-containers">
+<h2>Adding our two containers<a class="headerlink" href="#adding-our-two-containers" title="Permalink to this headline">¶</a></h2>
+<p>We need two containers, one for “Sally” and one for “Tom”. We pass a list of <a class="reference internal" href="container.html#snowfloat.container.Container" title="snowfloat.container.Container"><code class="xref py py-class docutils literal notranslate"><span class="pre">snowfloat.container.Container</span></code></a> objects to the method <a class="reference internal" href="client.html#snowfloat.client.Client.add_containers" title="snowfloat.client.Client.add_containers"><code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.add_containers()</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">containers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Container</span><span class="p">(</span><span class="n">dat</span><span class="o">=</span><span class="s1">&#39;Sally&#39;</span><span class="p">),</span>
+<span class="gp">... </span>              <span class="n">Container</span><span class="p">(</span><span class="n">dat</span><span class="o">=</span><span class="s1">&#39;Bob&#39;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">containers</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">add_containers</span><span class="p">(</span><span class="n">containers</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>At that point, the containers are stored online. Note how each object now has a unique ID and a unique URI.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">containers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">Container(id=11d53e204a9b45299e68d186e7405779,</span>
+<span class="go">          uri=/geo/1/containers/11d53e204a9b45299e68d186e7405779,</span>
+<span class="go">          dat=Sally,</span>
+<span class="go">          ts_created=1358100636,</span>
+<span class="go">          ts_modified=1358100636)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">container</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dat</span>
+<span class="go">&#39;Sally&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-points-to-a-container">
+<h2>Adding points to a container<a class="headerlink" href="#adding-points-to-a-container" title="Permalink to this headline">¶</a></h2>
+<p>We pass a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">snowfloat.geometry.Point</span></code> objects to the method <a class="reference internal" href="container.html#snowfloat.container.Container.add_geometries" title="snowfloat.container.Container.add_geometries"><code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.container.Container.add_geometries()</span></code></a>. We use the ‘dat’ key to store the heartbeat value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span><span class="p">],</span> <span class="n">ts</span><span class="o">=</span><span class="mi">1358000736</span><span class="p">,</span> <span class="n">dat</span><span class="o">=</span><span class="s1">&#39;61&#39;</span><span class="p">),</span>
+<span class="gp">... </span>          <span class="n">Point</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="p">[</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span><span class="p">],</span> <span class="n">ts</span><span class="o">=</span><span class="mi">1358000796</span><span class="p">,</span> <span class="n">dat</span><span class="o">=</span><span class="s1">&#39;63&#39;</span><span class="p">)]</span>
+<span class="go"># z coordinate defaults to 0.</span>
+<span class="go"># &#39;ts&#39; default value is the current time.</span>
+<span class="go"># &#39;dat&#39; default value is an emptry string. 16 bytes maximum.</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">add_geometries</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The points are now stored online. The method takes care of sending the points in batches of 1000. We can repeat the same step for our second container.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">Point(id=6bf3f0bc551f41a6b6d435d51793c850,</span>
+<span class="go">      uri=/geo/1/containers/11d53e204a9b45299e68d186e7405779/geometries/6bf3f0bc551f41a6b6d435d51793c850</span>
+<span class="go">      coordinates=[x1, y1, z1],</span>
+<span class="go">      ts=1358000736,</span>
+<span class="go">      dat=&#39;61&#39;,</span>
+<span class="go">      ts_created=1358010636,</span>
+<span class="go">      ts_modified=1358010636)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dat</span>
+<span class="go">&#39;61&#39;</span>
+</pre></div>
+</div>
+<p>We could also have used the method <a class="reference internal" href="client.html#snowfloat.client.Client.add_geometries" title="snowfloat.client.Client.add_geometries"><code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.add_geometries()</span></code></a> and specified the container ID.</p>
+<p>If you have Shapely installed, the Point object is also a shapely.geometry.Point object:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span>
+<span class="go">x1</span>
+</pre></div>
+</div>
+<p>Likely, we can add polygons to our container or even a mix of points and polygons.</p>
+</div>
+<div class="section" id="retrieving-points">
+<h2>Retrieving points<a class="headerlink" href="#retrieving-points" title="Permalink to this headline">¶</a></h2>
+<p>We want to retrieve the points which timestamp is included in the [t1, t2] range. We use the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.container.Container.get_points()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">get_geometries</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Point&#39;</span><span class="p">,</span> <span class="n">ts_range</span><span class="o">=</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">))</span>
+<span class="go"># ts_range defaults to (0, time.time())</span>
+</pre></div>
+</div>
+<p>We could also have used the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.get_points()</span></code> and specified the container ID.</p>
+</div>
+<div class="section" id="deleting-points">
+<h2>Deleting points<a class="headerlink" href="#deleting-points" title="Permalink to this headline">¶</a></h2>
+<p>We want to delete the points with a timestamp older than 24 hours for a specific container ID. We use the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.container.Container.delete_points()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">container</span><span class="o">.</span><span class="n">delete_geometries</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Point&#39;</span><span class="p">,</span>
+<span class="go">                                ts_range(0, time.time() - 24*3600)</span>
+<span class="go"># ts_range defaults to (0, time.time())</span>
+</pre></div>
+</div>
+<p>We could also have used the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.delete_points()</span></code> and specified the container ID.</p>
+<p>We can also delete individual point by using the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.geometry.Geometry.delete()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="distance-queries">
+<h2>Distance queries<a class="headerlink" href="#distance-queries" title="Permalink to this headline">¶</a></h2>
+<p>We can run some distance queries on our data online. For example, we want to get the list of points less than 10kms from a given point.</p>
+<img alt="../../_images/distance.png" src="../../_images/distance.png" />
+<p>This will tell us how much time was spent by “Tom” in this circular area:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">snowfloat.geometry</span>
+
+<span class="go"># Our lookup Point object.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">point</span> <span class="o">=</span> <span class="n">snowfloat</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+
+<span class="go"># Let&#39;s run our query on our dataset.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">get_geometries</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Point&#39;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;distance_lt&#39;</span><span class="p">,</span>
+<span class="go">                                      geometry=point, distance=10000)</span>
+<span class="go"># The distance needs to be in meters.</span>
+</pre></div>
+</div>
+<p>The distance queries supported are:</p>
+<ul class="simple">
+<li><strong>distance_gt</strong>: Returns geometries where the distance to the geometry from the lookup geometry is greater than the given distance value.</li>
+<li><strong>distance_gte</strong>: Returns geometries where the distance to the geometry from the lookup geometry is greater than or equal to the given distance value.</li>
+<li><strong>distance_lt</strong>: Returns geometries where the distance to the geometry from the lookup geometry is less than the given distance value.</li>
+<li><strong>distance_lte</strong>: Returns geometries where the distance to the geometry from the lookup geometry is less than or equal to the given distance value.</li>
+<li><strong>dwithin</strong>: Returns geometries where the distance to the geometry from the lookup geometry are within the given distance from one another.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The z coordinate is dropped during those queries.</p>
+</div>
+</div>
+<div class="section" id="spatial-queries">
+<h2>Spatial queries<a class="headerlink" href="#spatial-queries" title="Permalink to this headline">¶</a></h2>
+<p>We can run some spatial queries on our data online. For example, we want to get the list of points contained by an area defined as a polygon.</p>
+<img alt="../../_images/polygon.png" src="../../_images/polygon.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">snowfloat.geometry</span>
+
+<span class="go"># Our lookup Polygon object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polygon</span> <span class="o">=</span> <span class="n">snowfloat</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Polygon</span><span class="p">([[[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span>
+<span class="go">                                           [x2, y2],</span>
+<span class="go">                                           [x3, y3],</span>
+<span class="go">                                           [x4, y4],</span>
+<span class="go">                                           [x5, y5]]])</span>
+<span class="go"># z coordinate defaults to 0.</span>
+
+<span class="go"># Let&#39;s run our query on our dataset.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">get_geometries</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Point&#39;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;contained&#39;</span><span class="p">,</span>
+<span class="go">                                      geometry=polygon)</span>
+</pre></div>
+</div>
+<p>The spatial lookups supported are:</p>
+<ul class="simple">
+<li><strong>bbcontains</strong>: Returns geometries which bounding box completely contains the lookup geometry’s bounding box.</li>
+<li><strong>bboverlaps</strong>: Returns geometries which bounding box overlaps the lookup geometry’s bounding box.</li>
+<li><strong>contained</strong>: Returns geometries which bounding box is completely contained by the lookup geometry’s bounding box.</li>
+<li><strong>contains</strong>: Returns geometries containing spatially the lookup geometry.</li>
+<li><strong>contains_properly</strong>: Returns geometries which interior (not the boundary) is intersected by the loockup geometry.</li>
+<li><strong>covers</strong>: Returns geometries covering the lookup geometry.</li>
+<li><strong>crosses</strong>: Returns geometries crossing spatially the lookup geometry.</li>
+<li><strong>disjoint</strong>: Returns geometries spatially disjointed from the lookup geometry.</li>
+<li><strong>equals</strong>: Returns geometries equal to the lookup geometry.</li>
+<li><strong>intersects</strong>: Returns geometries instersecting spatially the lookup geometry.</li>
+<li><strong>overlaps</strong>: Returns geometries overlapping spatially the lookup geometry.</li>
+<li><strong>touches</strong>: Returns geometries touching spatially the lookup geometry.</li>
+<li><strong>within</strong>: Returns geometries spatially within the lookup geometry.</li>
+<li><strong>left</strong>: Returns geometries which bounding box is strictly to the left of the lookup geometry’s bounding box.</li>
+<li><strong>right</strong>: Returns geometries which bounding box is strictly to the right of the lookup geometry’s bounding box.</li>
+<li><strong>overlaps_left</strong>: Returns geometries which bounding box overlaps or is to the left of the lookup geometry’s bounding box.</li>
+<li><strong>overlaps_right</strong>: Returns geometries which bounding box overlaps or is to the right of the lookup geometry’s bounding box.</li>
+<li><strong>overlaps_above</strong>: Returns geometries which bounding box overlaps or is above the lookup geometry’s bounding box.</li>
+<li><strong>overlaps_below</strong>: Returns geometries which bounding box overlaps or is below the lookup geometry’s bounding box.</li>
+<li><strong>strictly_above</strong>: Returns geometries which bounding box is strictly above the lookup geometry’s bounding box.</li>
+<li><strong>strictly_below</strong>: Returns geometries which bounding box is strictly below the lookup geometry’s bounding box.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The z coordinate is dropped during those queries.</p>
+</div>
+</div>
+<div class="section" id="tasks">
+<h2>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h2>
+<p>We can also execute some tasks to perform time consuming computations. The method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.execute_tasks()</span></code> will send the tasks to the server, wait for them to complete and return the results.</p>
+<p>A task is specified using an operation, a resource and some parameters specific to the operation chosen. We can execute multiple tasks at the same time.</p>
+<p>One example is to execute two tasks calculating the distance and the velocity based on a list of points we have pushed to the server. Let say, we want to calculate the distance swimmed by our two seals “Sally” and “Tom” and their velocity between time t1 and t2:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>   <span class="p">{</span><span class="s1">&#39;operation&#39;</span><span class="p">:</span> <span class="n">snowfloat</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">Operations</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;resource&#39;</span><span class="p">:</span> <span class="s1">&#39;points&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;container_id&#39;</span><span class="p">:</span> <span class="n">containers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;ts_range&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)}</span>
+<span class="gp">... </span>   <span class="p">{</span><span class="s1">&#39;operation&#39;</span><span class="p">:</span> <span class="n">snowfloat</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">Operations</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;resource&#39;</span><span class="p">:</span> <span class="s1">&#39;points&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;container_id&#39;</span><span class="p">:</span> <span class="n">containers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;ts_range&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">execute_tasks</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span>
+<span class="go">[[{&quot;count&quot;: 10000, &quot;distance&quot;: 38263, &quot;velocity&quot;: 0.21}],</span>
+<span class="go"> [{&quot;count&quot;: 10000, &quot;distance&quot;: 14231, &quot;velocity&quot;: 0.06}]]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If a task fails, the dictionary will contain a key ‘error’ with a value set to the failure’s reason.</p>
+</div>
+<p>Another example is to execute one task generating a map with the points from our two containers between time t1 and t2. We use the “extras” field to specify our map box. The result is a URL you can use in a GET request to retrieve the map (png format):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>   <span class="p">{</span><span class="s1">&#39;operation&#39;</span><span class="p">:</span> <span class="n">snowfloat</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">Operations</span><span class="o">.</span><span class="n">map</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;resource&#39;</span><span class="p">:</span> <span class="s1">&#39;points&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;container_ids&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">containers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">containers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="s1">&#39;extras&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;llcrnrlat&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">75</span><span class="p">,</span>
+<span class="gp">... </span>               <span class="s1">&#39;llcrnrlon&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">165</span><span class="p">},</span>
+<span class="gp">... </span>               <span class="s1">&#39;urcrnrlat&#39;</span><span class="p">:</span> <span class="mi">75</span><span class="p">},</span>
+<span class="gp">... </span>               <span class="s1">&#39;urcrnrlon&#39;</span><span class="p">:</span> <span class="mi">165</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="s1">&#39;ts_range&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">execute_tasks</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span>
+<span class="go">[[{&quot;url&quot;: &quot;http://snowfloat.results.s3.amazonaws.com/ac7a4cf7b5cb4ace9cc33710883d68d7?Signature=PuVycdfhYyUmK4tMZ0YXaCYWG2Y%3D&amp;Expires=1360635770&amp;AWSAccessKeyId=AKIAJW5GLVYHVBDEHB7Q&quot;}]]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The URLs are only valid for 10 minutes for security reasons.</p>
+</div>
+<p>See <a class="reference internal" href="../../tasks.html"><span class="doc">Tasks</span></a> for a complete list of the tasks you can execute.</p>
+<p>See <a class="reference internal" href="performance.html"><span class="doc">Performance</span></a> for a report on the performance for common operations.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">SnowFloat Python client</a><ul>
+<li><a class="reference internal" href="#login">Login</a></li>
+<li><a class="reference internal" href="#adding-our-two-containers">Adding our two containers</a></li>
+<li><a class="reference internal" href="#adding-points-to-a-container">Adding points to a container</a></li>
+<li><a class="reference internal" href="#retrieving-points">Retrieving points</a></li>
+<li><a class="reference internal" href="#deleting-points">Deleting points</a></li>
+<li><a class="reference internal" href="#distance-queries">Distance queries</a></li>
+<li><a class="reference internal" href="#spatial-queries">Spatial queries</a></li>
+<li><a class="reference internal" href="#tasks">Tasks</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/clients/python/tutorial.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">SnowFloat 0.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Laurent Luce.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>

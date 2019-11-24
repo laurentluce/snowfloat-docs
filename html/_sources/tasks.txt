@@ -1,0 +1,38 @@
+=====
+Tasks
+=====
+
+Stats
+=====
+
+Return the total distance in meters of the points ordered by time and the velocity based on the distance and their timestamp.
+
+* operation: snowfloat.task.Operations.stats
+* resource: 'points'
+* container_id
+* ts_range: defaults to (0, current_time)
+
+The result format is::
+
+    [{'count': <nb of points>,
+      'distance': <distance in meters>,
+      'velocity': <speed in m/s>'}]
+
+Map
+===
+
+Generate a map with the points from a list of containers. Return a URL valid for 10 minutes to GET the map. Each container's points will be plotted using a unique color.
+
+* operation: snowfloat.task.Operations.map
+* resource: 'points'
+* container_ids: List of container IDs.
+* extras: {'llcrnrlat': <lower left corner latitude of the map box>, 'llcrnrlon': <lower left corner longitude of the map box>, 'urcrnrlat': <upper right corner latitude of the map box>, 'urcrnrlon': <upper right corner longitude of the map box>}
+* ts_range: defaults to (0, current_time)
+
+The result format is::
+
+    [{'url': <url>}]
+
+Do you need a task different than the one listed above? Send us an `email`_.
+
+.. _email: mailto:snowfloat@snowfloat.com

@@ -1,0 +1,8 @@
+======
+Client
+======
+
+.. automodule:: snowfloat.client
+
+.. autoclass:: Client
+     :members:

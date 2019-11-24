@@ -1,0 +1,123 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Tasks &#8212; SnowFloat 0.2 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">SnowFloat 0.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tasks">
+<h1>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="stats">
+<h2>Stats<a class="headerlink" href="#stats" title="Permalink to this headline">¶</a></h2>
+<p>Return the total distance in meters of the points ordered by time and the velocity based on the distance and their timestamp.</p>
+<ul class="simple">
+<li>operation: snowfloat.task.Operations.stats</li>
+<li>resource: ‘points’</li>
+<li>container_id</li>
+<li>ts_range: defaults to (0, current_time)</li>
+</ul>
+<p>The result format is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">nb</span> <span class="n">of</span> <span class="n">points</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s1">&#39;distance&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">distance</span> <span class="ow">in</span> <span class="n">meters</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s1">&#39;velocity&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">speed</span> <span class="ow">in</span> <span class="n">m</span><span class="o">/</span><span class="n">s</span><span class="o">&gt;</span><span class="s1">&#39;}]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="map">
+<h2>Map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h2>
+<p>Generate a map with the points from a list of containers. Return a URL valid for 10 minutes to GET the map. Each container’s points will be plotted using a unique color.</p>
+<ul class="simple">
+<li>operation: snowfloat.task.Operations.map</li>
+<li>resource: ‘points’</li>
+<li>container_ids: List of container IDs.</li>
+<li>extras: {‘llcrnrlat’: &lt;lower left corner latitude of the map box&gt;, ‘llcrnrlon’: &lt;lower left corner longitude of the map box&gt;, ‘urcrnrlat’: &lt;upper right corner latitude of the map box&gt;, ‘urcrnrlon’: &lt;upper right corner longitude of the map box&gt;}</li>
+<li>ts_range: defaults to (0, current_time)</li>
+</ul>
+<p>The result format is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">url</span><span class="o">&gt;</span><span class="p">}]</span>
+</pre></div>
+</div>
+<p>Do you need a task different than the one listed above? Send us an <a class="reference external" href="mailto:snowfloat&#37;&#52;&#48;snowfloat&#46;com">email</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tasks</a><ul>
+<li><a class="reference internal" href="#stats">Stats</a></li>
+<li><a class="reference internal" href="#map">Map</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tasks.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">SnowFloat 0.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Laurent Luce.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>

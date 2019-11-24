@@ -1,0 +1,58 @@
+===========
+Performance
+===========
+
+This document goes over the performance of some common operations performed against the SnowFloat cluster.
+
+We used the following setup:
+
+* Client laptop: Thinkpad T510. Ubuntu 12.04. Python 2.7.
+* Internet connections: Comcast 20Mbps download - 5 Mbps upload.
+* Client location: Massachusetts
+* SnowFloat cluster location: Virginia
+
+.. note:: Each result includes the trip time, server processing time and client processing time. All results are in seconds. Results can vary based on server load.
+
+Containers
+==========
+
+* **Add 10 containers**: 0.31
+* **Get 10 containers**: 0.26
+* **Edit one container**: 0.24
+* **Delete one container**: 0.35
+
+Points
+======
+
+* **Add 1000 points**: 3.23
+* **Get 1000 points**: 2.37
+* **Edit one point**: 0.27
+* **Delete 1000 points**: 0.31
+
+Polygons
+========
+
+* **Add 1000 polygons**: 5.03
+* **Get 1000 polygons**: 3.05
+* **Edit one polygon**: 0.31
+* **Delete 1000 polygons**: 0.31
+
+Spatial queries
+===============
+
+* **distance_lte**: point lookup on 10000 points: 0.39
+* **contained**: polygon lookup on 10000 points: 0.44
+
+.. note:: Those spatial queries response time can increase if many points are returned.
+
+Tasks
+=====
+
+* **Stats**: distance and velocity on 10000 points: 13.16
+* **Map**: Map of two containters with 1000 points each: 14.41
+
+If you're having more questions, please email us at `SnowFloat Help`__.
+
+__ mailto:snowfloat@snowfloat.com
+
+

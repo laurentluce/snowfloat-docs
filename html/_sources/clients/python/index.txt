@@ -1,0 +1,13 @@
+Python Client
+=============
+
+New to SnowFloat? Well, you came to the right place: read this material to quickly get up and running.
+
+.. toctree::
+   :maxdepth: 1
+
+   install
+   tutorial
+   tasks
+   client
+   container
