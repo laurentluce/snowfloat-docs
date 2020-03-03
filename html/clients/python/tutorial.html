@@ -23,9 +23,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">SnowFloat 0.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
@@ -37,12 +34,11 @@
             
   <div class="section" id="snowfloat-python-client">
 <h1>SnowFloat Python client<a class="headerlink" href="#snowfloat-python-client" title="Permalink to this headline">¶</a></h1>
-<p>We’ll assume you have <a class="reference internal" href="install.html"><span class="doc">snowfloat-python installed</span></a> already.</p>
-<p>If you’re having trouble going through this tutorial, please email us at <a class="reference external" href="mailto:snowfloat&#37;&#52;&#48;snowfloat&#46;com">SnowFloat Help</a>.</p>
-<p>Let’s learn by example.</p>
+<p>We’ll assume you have <a class="reference internal" href="install.html"><span class="doc">snowfloat-python</span></a> already installed.</p>
+<p>Let’s learn with an example.</p>
 <p>We are tracking two seals: “Sally” (Red points) and “Tom” (Green points).</p>
 <img alt="../../_images/trace.png" src="../../_images/trace.png" />
-<p>Each point has a longitude (x), latitude (y) and altitude (z) along with a timestamp and a heartbeat value. We want to store this data online and run some queries on it.</p>
+<p>Each point has the following attributes: longitude (x), latitude (y), altitude (z), timestamp and heartbeat. We want to store this data on the server and run some queries on it.</p>
 <p>Each seal can be seen as a container and we can associate points to each container.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -50,7 +46,7 @@
 </div>
 <div class="section" id="login">
 <h2>Login<a class="headerlink" href="#login" title="Permalink to this headline">¶</a></h2>
-<p>You need to login using the API key. We pass the API key to the method <a class="reference internal" href="client.html#snowfloat.client.Client.login" title="snowfloat.client.Client.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.login()</span></code></a>:</p>
+<p>We need to login using the API key. We pass the API key to the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.login()</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">snowfloat.client</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">snowfloat</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
@@ -64,7 +60,7 @@
 </div>
 <div class="section" id="adding-our-two-containers">
 <h2>Adding our two containers<a class="headerlink" href="#adding-our-two-containers" title="Permalink to this headline">¶</a></h2>
-<p>We need two containers, one for “Sally” and one for “Tom”. We pass a list of <a class="reference internal" href="container.html#snowfloat.container.Container" title="snowfloat.container.Container"><code class="xref py py-class docutils literal notranslate"><span class="pre">snowfloat.container.Container</span></code></a> objects to the method <a class="reference internal" href="client.html#snowfloat.client.Client.add_containers" title="snowfloat.client.Client.add_containers"><code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.add_containers()</span></code></a>:</p>
+<p>We need two containers, one for “Sally” and one for “Tom”. We pass a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">snowfloat.container.Container</span></code> objects to the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.add_containers()</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">containers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Container</span><span class="p">(</span><span class="n">dat</span><span class="o">=</span><span class="s1">&#39;Sally&#39;</span><span class="p">),</span>
 <span class="gp">... </span>              <span class="n">Container</span><span class="p">(</span><span class="n">dat</span><span class="o">=</span><span class="s1">&#39;Bob&#39;</span><span class="p">)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">containers</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">add_containers</span><span class="p">(</span><span class="n">containers</span><span class="p">)</span>
@@ -86,7 +82,7 @@
 </div>
 <div class="section" id="adding-points-to-a-container">
 <h2>Adding points to a container<a class="headerlink" href="#adding-points-to-a-container" title="Permalink to this headline">¶</a></h2>
-<p>We pass a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">snowfloat.geometry.Point</span></code> objects to the method <a class="reference internal" href="container.html#snowfloat.container.Container.add_geometries" title="snowfloat.container.Container.add_geometries"><code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.container.Container.add_geometries()</span></code></a>. We use the ‘dat’ key to store the heartbeat value:</p>
+<p>We pass a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">snowfloat.geometry.Point</span></code> objects to the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.container.Container.add_geometries()</span></code>. We use the ‘dat’ key to store the heartbeat value:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span><span class="p">],</span> <span class="n">ts</span><span class="o">=</span><span class="mi">1358000736</span><span class="p">,</span> <span class="n">dat</span><span class="o">=</span><span class="s1">&#39;61&#39;</span><span class="p">),</span>
 <span class="gp">... </span>          <span class="n">Point</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="p">[</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span><span class="p">],</span> <span class="n">ts</span><span class="o">=</span><span class="mi">1358000796</span><span class="p">,</span> <span class="n">dat</span><span class="o">=</span><span class="s1">&#39;63&#39;</span><span class="p">)]</span>
 <span class="go"># z coordinate defaults to 0.</span>
@@ -109,7 +105,7 @@
 <span class="go">&#39;61&#39;</span>
 </pre></div>
 </div>
-<p>We could also have used the method <a class="reference internal" href="client.html#snowfloat.client.Client.add_geometries" title="snowfloat.client.Client.add_geometries"><code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.add_geometries()</span></code></a> and specified the container ID.</p>
+<p>We could also have used the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.add_geometries()</span></code> and specified the container ID.</p>
 <p>If you have Shapely installed, the Point object is also a shapely.geometry.Point object:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span>
 <span class="go">x1</span>
@@ -119,7 +115,7 @@
 </div>
 <div class="section" id="retrieving-points">
 <h2>Retrieving points<a class="headerlink" href="#retrieving-points" title="Permalink to this headline">¶</a></h2>
-<p>We want to retrieve the points which timestamp is included in the [t1, t2] range. We use the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.container.Container.get_points()</span></code>:</p>
+<p>We want to retrieve the points with timestamp included in the [t1, t2] range. We use the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.container.Container.get_points()</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">get_geometries</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Point&#39;</span><span class="p">,</span> <span class="n">ts_range</span><span class="o">=</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">))</span>
 <span class="go"># ts_range defaults to (0, time.time())</span>
 </pre></div>
@@ -135,7 +131,7 @@
 </pre></div>
 </div>
 <p>We could also have used the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.Client.delete_points()</span></code> and specified the container ID.</p>
-<p>We can also delete individual point by using the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.geometry.Geometry.delete()</span></code>:</p>
+<p>We can also delete individual using the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.geometry.Geometry.delete()</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -144,7 +140,7 @@
 <h2>Distance queries<a class="headerlink" href="#distance-queries" title="Permalink to this headline">¶</a></h2>
 <p>We can run some distance queries on our data online. For example, we want to get the list of points less than 10kms from a given point.</p>
 <img alt="../../_images/distance.png" src="../../_images/distance.png" />
-<p>This will tell us how much time was spent by “Tom” in this circular area:</p>
+<p>This tells us how much time was spent by “Tom” in this circular area:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">snowfloat.geometry</span>
 
 <span class="go"># Our lookup Point object.</span>
@@ -171,7 +167,7 @@
 </div>
 <div class="section" id="spatial-queries">
 <h2>Spatial queries<a class="headerlink" href="#spatial-queries" title="Permalink to this headline">¶</a></h2>
-<p>We can run some spatial queries on our data online. For example, we want to get the list of points contained by an area defined as a polygon.</p>
+<p>We can run some spatial queries on our data online. For example, we want to get the list of points contained in an area defined as a polygon.</p>
 <img alt="../../_images/polygon.png" src="../../_images/polygon.png" />
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">snowfloat.geometry</span>
 
@@ -219,7 +215,7 @@
 </div>
 <div class="section" id="tasks">
 <h2>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h2>
-<p>We can also execute some tasks to perform time consuming computations. The method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.execute_tasks()</span></code> will send the tasks to the server, wait for them to complete and return the results.</p>
+<p>We can also run background tasks for time consuming operations. The method <code class="xref py py-meth docutils literal notranslate"><span class="pre">snowfloat.client.execute_tasks()</span></code> sends the tasks to the server, waits for them to complete and returns the results.</p>
 <p>A task is specified using an operation, a resource and some parameters specific to the operation chosen. We can execute multiple tasks at the same time.</p>
 <p>One example is to execute two tasks calculating the distance and the velocity based on a list of points we have pushed to the server. Let say, we want to calculate the distance swimmed by our two seals “Sally” and “Tom” and their velocity between time t1 and t2:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
@@ -239,7 +235,7 @@
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If a task fails, the dictionary will contain a key ‘error’ with a value set to the failure’s reason.</p>
+<p class="last">If a task fails, the dictionary contains a key ‘error’ with a value set to the failure’s reason.</p>
 </div>
 <p>Another example is to execute one task generating a map with the points from our two containers between time t1 and t2. We use the “extras” field to specify our map box. The result is a URL you can use in a GET request to retrieve the map (png format):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
@@ -315,9 +311,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">SnowFloat 0.2 documentation</a> &#187;</li> 
       </ul>
     </div>

@@ -2,28 +2,24 @@
 SnowFloat Python client
 =======================
 
-We'll assume you have :doc:`snowfloat-python installed </clients/python/install>` already.
+We'll assume you have :doc:`snowfloat-python </clients/python/install>` already installed.
 
-If you're having trouble going through this tutorial, please email us at `SnowFloat Help`__.
-
-__ mailto:snowfloat@snowfloat.com
-
-Let's learn by example.
+Let's learn with an example.
 
 We are tracking two seals: "Sally" (Red points) and "Tom" (Green points).
 
 .. image:: img/trace.png
 
-Each point has a longitude (x), latitude (y) and altitude (z) along with a timestamp and a heartbeat value. We want to store this data online and run some queries on it.
+Each point has the following attributes: longitude (x), latitude (y), altitude (z), timestamp and heartbeat. We want to store this data on the server and run some queries on it.
 
-Each seal can be seen as a container and we can associate points to each container. 
+Each seal can be seen as a container and we can associate points to each container.
 
 .. note:: SnowFloat can be applied to many domains: Scientific, Aviation, Maritime, Defense, Cities...
 
 Login
 =====
 
-You need to login using the API key. We pass the API key to the method :py:meth:`snowfloat.client.Client.login`::
+We need to login using the API key. We pass the API key to the method :py:meth:`snowfloat.client.Client.login`::
 
     >>> import snowfloat.client
 
@@ -93,7 +89,7 @@ Likely, we can add polygons to our container or even a mix of points and polygon
 Retrieving points
 =================
 
-We want to retrieve the points which timestamp is included in the [t1, t2] range. We use the method :py:meth:`snowfloat.container.Container.get_points`::
+We want to retrieve the points with timestamp included in the [t1, t2] range. We use the method :py:meth:`snowfloat.container.Container.get_points`::
 
     >>> points = container.get_geometries(type='Point', ts_range=(t1, t2))
     # ts_range defaults to (0, time.time())
@@ -112,7 +108,7 @@ We want to delete the points with a timestamp older than 24 hours for a specific
     
 We could also have used the method :py:meth:`snowfloat.client.Client.delete_points` and specified the container ID.
 
-We can also delete individual point by using the method :py:meth:`snowfloat.geometry.Geometry.delete`::
+We can also delete individual using the method :py:meth:`snowfloat.geometry.Geometry.delete`::
 
     >>> points[0].delete()
 
@@ -124,7 +120,7 @@ We can run some distance queries on our data online. For example, we want to get
 
 .. image:: img/distance.png
 
-This will tell us how much time was spent by "Tom" in this circular area::
+This tells us how much time was spent by "Tom" in this circular area::
 
     >>> import snowfloat.geometry
 
@@ -149,7 +145,7 @@ The distance queries supported are:
 Spatial queries
 ===============
 
-We can run some spatial queries on our data online. For example, we want to get the list of points contained by an area defined as a polygon.
+We can run some spatial queries on our data online. For example, we want to get the list of points contained in an area defined as a polygon.
 
 .. image:: img/polygon.png
 
@@ -200,7 +196,7 @@ The spatial lookups supported are:
 Tasks
 =====
 
-We can also execute some tasks to perform time consuming computations. The method :py:meth:`snowfloat.client.execute_tasks` will send the tasks to the server, wait for them to complete and return the results.
+We can also run background tasks for time consuming operations. The method :py:meth:`snowfloat.client.execute_tasks` sends the tasks to the server, waits for them to complete and returns the results.
 
 A task is specified using an operation, a resource and some parameters specific to the operation chosen. We can execute multiple tasks at the same time.
 
@@ -220,7 +216,7 @@ One example is to execute two tasks calculating the distance and the velocity ba
         [[{"count": 10000, "distance": 38263, "velocity": 0.21}],
          [{"count": 10000, "distance": 14231, "velocity": 0.06}]]
 
-.. note:: If a task fails, the dictionary will contain a key 'error' with a value set to the failure's reason.
+.. note:: If a task fails, the dictionary contains a key 'error' with a value set to the failure's reason.
 
 Another example is to execute one task generating a map with the points from our two containers between time t1 and t2. We use the "extras" field to specify our map box. The result is a URL you can use in a GET request to retrieve the map (png format)::
 
